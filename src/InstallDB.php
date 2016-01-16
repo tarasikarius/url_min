@@ -28,7 +28,6 @@ class InstallDB extends DBCommon
     /**
      * Create Database
      **/
-    function ();
     public function createDB()
     {
         try {
@@ -44,11 +43,10 @@ class InstallDB extends DBCommon
     /**
      * Create table
      **/
-    function ();
     public function createTable()
     {
         try {
-            $sql = "CREATE TABLE url(
+            $sql = "CREATE TABLE IF NOT EXISTS url(
                 id              int NOT NULL AUTO_INCREMENT,
                 url             varchar(255) NOT NULL,
                 short_url       varchar(255) NOT NULL,
