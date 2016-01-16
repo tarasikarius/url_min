@@ -39,7 +39,7 @@ class Url
             }
         }
 
-        $this->db->insert($this->table, $url, $short_url, $expire_date)->get();
+        $this->db->insert($this->table, $url, $short_url, $expire_date);
         $this->short_url = $short_url;
     }
 
@@ -93,10 +93,11 @@ class Url
      **/
     public function isExpired($date)
     {
-        $today = date("Y-m-d");
-
-        if ($today >= $date) {
-            return TRUE;
+        if ($date != '0000-00-00') {
+            $today = date("Y-m-d");
+            if ($today >= $date) {
+                return TRUE;
+            }
         }
 
         return FALSE;

@@ -2,11 +2,12 @@
 
 namespace App;
 
+use App\DBCommon;
 use PDO;
 
-class DB
+class DB extends DBCommon
 {
-    private static $dbh;
+    public static $dbh;
     private $sql;
     private $attributes;
 
@@ -15,15 +16,14 @@ class DB
      */
     public function __construct() {
         if (!self::$dbh) {
-            $host = getenv('DB_HOST');
-            $db = getenv('DB_DATABASE');
-            $user = getenv('DB_USERNAME');
-            $pass = getenv('DB_PASSWORD');
-            $dsn = 'mysql:dbname=' . $db . ';host=localhost';
+            parent::__construct();
+
+            $db_string = 'dbname=' . $this->dbname;
+            $dsn = 'mysql:host=' . $this->host . ';' . $db_string;
 
             try {
-                self::$dbh = new PDO($dsn, $user, $pass);
-                $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$dbh = new PDO($dsn, $this->user, $this->pass);
+                self::$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
                 echo 'Connection failed: ' . $e->getMessage();
             }
@@ -64,11 +64,15 @@ class DB
      **/
     public function get()
     {
-        $sth = self::$dbh->prepare($this->sql);
-        $sth->execute($this->attributes);
-        $result = $sth->fetch(PDO::FETCH_ASSOC);
+        try {
+            $sth = self::$dbh->prepare($this->sql);
+            $sth->execute($this->attributes);
+            $result = $sth->fetch(PDO::FETCH_ASSOC);
 
-        return $result;
+            return $result;
+        } catch (PDOException $e) {
+            echo 'Sorry, errors everywhere(';
+        }
     }
 
     /**
@@ -79,20 +83,19 @@ class DB
      **/
     public function insert($table, $url, $short_url, $expire_date)
     {
-        $this->sql = "INSERT INTO $table (url, short_url, expire_date)
-                        VALUES (:url, :short_url, :expire_date)";
-        $this->attributes = [
-            ':url' => $url,
-            ':short_url' => $short_url,
-            ':expire_date' => $expire_date,
-        ];
+        try {
+            $this->sql = "INSERT INTO $table (url, short_url, expire_date)
+                            VALUES (:url, :short_url, :expire_date)";
+            $this->attributes = [
+                ':url' => $url,
+                ':short_url' => $short_url,
+                ':expire_date' => $expire_date,
+            ];
 
-        return $this;
+            $sth = self::$dbh->prepare($this->sql);
+            $sth->execute($this->attributes);
+        } catch (PDOException $e) {
+            echo 'Sorry, errors everywhere(';
+        }
     }
-
-    public function delete()
-    {
-        # code...
-    }
-
 }

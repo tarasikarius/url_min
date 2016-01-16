@@ -19,7 +19,6 @@ class Page
             $this->url = isset($_POST['url']) ? $_POST['url'] : '';
             $this->short_url = isset($_POST['short_url']) ? $_POST['short_url'] : '';
             $this->expire_date = isset($_POST['expire_date']) ? $_POST['expire_date'] : '';
-            // $this->expire_date = strtotime($expire_date);
 
             $url_obj = new Url();
             $url_obj->store($this->url, $this->short_url, $this->expire_date);
