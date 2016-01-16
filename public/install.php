@@ -7,6 +7,11 @@ require __DIR__ . '/../vendor/autoload.php';
 $dotenv = new Dotenv\Dotenv( __DIR__ . '/..');
 $dotenv->load();
 
+use App\InstallDB;
 
-$page = new App\Page();
-$page->render();
+$install = new InstallDB();
+$install->createDB();
+$install->createTable();
+
+
+
