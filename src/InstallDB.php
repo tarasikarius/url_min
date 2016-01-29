@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\DBCommon;
 use PDO;
+use App\DBCommon;
 
 class InstallDB extends DBCommon
 {
@@ -27,7 +27,7 @@ class InstallDB extends DBCommon
 
     /**
      * Create Database
-     **/
+     */
     public function createDB()
     {
         try {
@@ -42,7 +42,7 @@ class InstallDB extends DBCommon
 
     /**
      * Create table
-     **/
+     */
     public function createTable()
     {
         try {

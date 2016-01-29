@@ -5,63 +5,85 @@ use App\Url;
 
 class Page
 {
-    protected $url;
-    protected $short_url;
-    protected $expire_date;
+    public $url_obj;
+    protected $errors = [];
 
     /**
      * Generate new Url instance.
      *
-     **/
+     */
     public function __construct()
     {
-        if ($_POST) {
-            $this->url = isset($_POST['url']) ? $_POST['url'] : '';
-            $this->short_url = isset($_POST['short_url']) ? $_POST['short_url'] : '';
-            $this->expire_date = isset($_POST['expire_date']) ? $_POST['expire_date'] : '';
-
-            $url_obj = new Url();
-            $url_obj->store($this->url, $this->short_url, $this->expire_date);
-
-            $this->short_url = $url_obj->short_url;
-        }
+        $this->url_obj = new Url();
     }
 
     /**
-     * Render form or redirect to short url's full link
-     *
-     **/
-    public function render()
+     * Validate form input.
+     */
+    public function inputValidate(array $input)
     {
-        if (!$uri = $this->getUri()) {
-            require "../tpl/default.php";
-        }
-        else {
-            $url_obj = new Url();
-
-            if ($link = $url_obj->getLink($uri)) {
-                $url = $link['url'];
-                $date = $link['expire_date'];
-
-                if (!$url_obj->isExpired($date)) {
-                    header("Location: $url",TRUE,302);
-                }
-            }
-            require "../tpl/404.php";
+        if (!$input['url']) {
+            $this->errors[] = 'Url field is required';
         }
 
+        if ($this->url_obj->isShortUrlExists($input['short_url'])) {
+            $this->errors[] = 'Sorry, given Short url already taken. Please chose another one.';
+        }
+
+        $input['short_url'] = $input['short_url'] ? $input['short_url'] : '';
+        $input['expire_date'] = $input['expire_date'] ? $input['expire_date'] : '';
+
+        return $input;
+    }
+
+    /**
+     * Render given page.
+     */
+    public function renderPage($page = '404')
+    {
+        $path = '../tpl/' . $page . '.php';
+
+        if (!file_exists($path)) {
+            require_once '../tpl/404.php';
+
+            return;
+        }
+
+        require_once '../tpl/' . $page . '.php';
+    }
+
+    /**
+     * Redirect to given uri.
+     */
+    public function redirectTo($uri)
+    {
+        $url_obj = $this->url_obj;
+
+        if (!$link = $url_obj->getLink($uri)) {
+            return $this->renderPage($uri);
+        }
+
+        $url = $link['url'];
+        $date = $link['expire_date'];
+
+        if (!$url_obj->isExpired($date)) {
+            header("Location: $url", TRUE, 302);
+        }
+
+        $this->renderPage();
     }
 
     /**
      * Generate page header
      *
      * @return string
-     **/
+     */
     public function renderHeader()
     {
-        if (!empty($this->short_url)) {
-            return 'Your Result: <a href=' . $this->short_url . ' target="blank">
-                http://' . $_SERVER['HTTP_HOST'] . '/' . $this->short_url . '
+        $short_url = $this->url_obj->short_url;
+        if (!empty($short_url)) {
+            return 'Your Result: <a href=' . $short_url . ' target="blank">
+                http://' . $_SERVER['HTTP_HOST'] . '/' . $short_url . '
             </a>';
         }
 
@@ -72,7 +94,7 @@ class Page
      * Get current uri.
      *
      * @return void
-     **/
+     */
     public function getUri()
     {
         $string = $_SERVER['REQUEST_URI'];
@@ -84,6 +106,36 @@ class Page
         $uri = ltrim($string, '/');
 
         return $uri;
+    }
+
+    /**
+     * Get current short url.
+     *
+     * @return string
+     */
+    public function getShortUrl()
+    {
+        return $this->url_obj->short_url;
+    }
+
+    /**
+     * Get current url.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url_obj->url;
+    }
+
+    /**
+     * Get current expire date.
+     *
+     * @return string
+     */
+    public function getExpireDate()
+    {
+        return $this->url_obj->expire_date;
     }
 
 }

@@ -13,12 +13,22 @@
         </h1>
     </header><!-- end header -->
 
+    <?php if (!empty($this->errors)): ?>
+        <div class="alert alert-warning">
+            <ul>
+                <?php foreach ($this->errors as $error): ?>
+                    <li><?= $error; ?></li>
+                <?php endforeach ?>
+            </ul>
+        </div>
+    <?php endif ?>
+
     <div class="container">
         <form action="/" method="POST" class="form-horizontal">
             <div class="form-group">
                 <label for="url" class="col-sm-2 control-label">URL:</label>
                 <div class="col-sm-10">
-                    <input name="url" type="text" class="form-control" value="<?php echo $this->url; ?>" placeholder="Enter url you want to minify" required>
+                    <input name="url" type="text" class="form-control" value="<?php echo $this->getUrl(); ?>" placeholder="Enter url you want to minify">
                 </div>
             </div>
 
@@ -27,7 +37,7 @@
                     http://<?php echo $_SERVER['HTTP_HOST']; ?>/
                 </label>
                 <div class="col-sm-10">
-                    <input name="short_url" type="text" class="form-control" value="<?php echo $this->short_url; ?>" placeholder="Here you can add your short link">
+                    <input name="short_url" type="text" class="form-control" value="<?php echo $this->getShortUrl(); ?>" placeholder="Here you can add your short link">
                 </div>
 
             </div>
@@ -35,7 +45,7 @@
             <div class="form-group">
                 <label for="expire_date" class="col-sm-2 control-label">Expire date:</label>
                 <div class="col-sm-2">
-                    <input name="expire_date" type="date" class="form-control" value="<?php echo $this->expire_date; ?>">
+                    <input name="expire_date" type="date" class="form-control" value="<?php echo $this->getExpireDate(); ?>">
                 </div>
             </div>
 

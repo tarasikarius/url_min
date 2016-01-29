@@ -8,5 +8,7 @@ $dotenv = new Dotenv\Dotenv( __DIR__ . '/..');
 $dotenv->load();
 
 
-$page = new App\Page();
-$page->render();
+// $page = new App\Page();
+// $page->render();
+
+$app = new App\App();
