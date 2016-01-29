@@ -39,7 +39,7 @@ class Page
         else {
             $url_obj = new Url();
 
-            if ($link = $url_obj->get_link($uri)) {
+            if ($link = $url_obj->getLink($uri)) {
                 $url = $link['url'];
                 $date = $link['expire_date'];
 

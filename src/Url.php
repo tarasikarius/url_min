@@ -28,14 +28,14 @@ class Url
         }
 
         if (!empty($short_url)) {
-            if (!$this->check_short_url($short_url)) {
+            if (!$this->checkShortUrl($short_url)) {
                 die('Sorry, given Short url already taken. Please chose another one.');
             }
         }
         else {
             for ($i=FALSE; $i==FALSE;) {
-                $short_url = $this->random_string();
-                $i = $this->check_short_url($short_url);
+                $short_url = $this->randomString();
+                $i = $this->checkShortUrl($short_url);
             }
         }
 
@@ -49,7 +49,7 @@ class Url
      * @param  string $short_url
      * @return boolean
      **/
-    public function check_short_url($short_url)
+    public function checkShortUrl($short_url)
     {
         $result = $this->db->select('url', 'id')->where('short_url', '=', $short_url)->get();
         if ($result) {
@@ -65,7 +65,7 @@ class Url
      * @param  string $short_url
      * @return void
      **/
-    public function get_link($short_url)
+    public function getLink($short_url)
     {
         $result = $this->db->select('url', 'url, expire_date')->where('short_url', '=', $short_url)->get();
         if ($result) {
@@ -80,7 +80,7 @@ class Url
      *
      * @return string
      **/
-    public function random_string()
+    public function randomString()
     {
         $chars = array_merge(range(0, 9), range('a', 'z'), range('A', 'Z'));
         return substr(str_shuffle(implode($chars)), 0, rand(2, 4));
