@@ -1,11 +1,7 @@
 <?php
 
-// require composer autoload functions
-require __DIR__ . '/../vendor/autoload.php';
-
-// load dotenv library
-$dotenv = new Dotenv\Dotenv( __DIR__ . '/..');
-$dotenv->load();
+// Include composer autoload functions
+require_once "../src/autoload.php";
 
 use App\InstallDB;
 

@@ -40,7 +40,7 @@ class Url
         }
     }
 
-    public function setShortUrl($short_url)
+    public function setShortUrl($short_url = '')
     {
         if (!empty($short_url)) {
             return $short_url;
@@ -78,12 +78,18 @@ class Url
      */
     public function getLink($short_url)
     {
-        $result = $this->db->select('url', 'url, expire_date')->where('short_url', '=', $short_url)->get();
+        $db = $this->getDB();
+        $result = $db
+            ->select('url', 'url, expire_date')
+            ->where('short_url', '=', $short_url)
+            ->get()
+        ;
+
         if ($result) {
             return $result;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -112,5 +118,15 @@ class Url
         }
 
         return FALSE;
+    }
+
+    /**
+     * Get DB object
+     *
+     * @return App\DB
+     */
+    public function getDB()
+    {
+        return $this->db;
     }
 }

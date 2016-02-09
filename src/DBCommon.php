@@ -18,7 +18,4 @@ class DBCommon
         $this->user = getenv('DB_USERNAME');
         $this->pass = getenv('DB_PASSWORD');
     }
-
-
-
 }

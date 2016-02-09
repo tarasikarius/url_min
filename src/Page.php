@@ -10,7 +10,6 @@ class Page
 
     /**
      * Generate new Url instance.
-     *
      */
     public function __construct()
     {
@@ -22,6 +21,9 @@ class Page
      */
     public function inputValidate(array $input)
     {
+        /**
+         * нужно ли выкидывать исключение если не масив??
+         */
         if (!$input['url']) {
             $this->errors[] = 'Url field is required';
         }
@@ -49,7 +51,7 @@ class Page
             return;
         }
 
-        require_once '../tpl/' . $page . '.php';
+        require_once $path;
     }
 
     /**
@@ -82,7 +84,7 @@ class Page
     {
         $short_url = $this->url_obj->short_url;
         if (!empty($short_url)) {
-            return 'Your Result: <a href=' . $short_url . ' target="blank">
+            return 'Your Result: <a href="' . $short_url . '" target="blank">
                 http://' . $_SERVER['HTTP_HOST'] . '/' . $short_url . '
             </a>';
         }
@@ -136,6 +138,16 @@ class Page
     public function getExpireDate()
     {
         return $this->url_obj->expire_date;
+    }
+
+    /**
+     * Get errors
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
 }

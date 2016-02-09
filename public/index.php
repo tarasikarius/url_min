@@ -1,14 +1,7 @@
 <?php
 
-// require composer autoload functions
-require __DIR__ . '/../vendor/autoload.php';
+// Include composer autoload functions
+require_once "../src/autoload.php";
 
-// load dotenv library
-$dotenv = new Dotenv\Dotenv( __DIR__ . '/..');
-$dotenv->load();
-
-
-// $page = new App\Page();
-// $page->render();
-
+// Create an app instanse
 $app = new App\App();
